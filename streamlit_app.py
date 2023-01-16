@@ -43,9 +43,6 @@ try:
 
 #import requests
 
-import snowflake.connector
-
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 streamlit.header("The fruit load list contains:")
 #Snowflake-related functions
 def get_fruit-load_list():
@@ -54,7 +51,14 @@ def get_fruit-load_list():
     return my_cur.fetchall()
 streamlit.dataframe(my_data_rows)
 
-add_my_fruit = streamlit.text_input('What fruit would you like to add?','jackfruit')
-streamlit.write('Thanks for adding', add_my_fruit)
+def inster_row_snowflake(new_fruit):
+    with my_cnx.cursos() as my_cur:
+    my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+    return "Thanks for adding" + new_fruit
 
-my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+add_my_fruit = streamlit.text_input('What fruit would you like to add?')
+if streamlit.button('Add a Fruit to the List'):
+    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+    back_from_function = inserted_row_snowflake(add_my_fruit)
+    streamlit.text(back_from_function)
+    
